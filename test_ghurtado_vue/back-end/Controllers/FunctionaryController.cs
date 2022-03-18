@@ -7,22 +7,25 @@ namespace back_end.Controllers
     //[ApiController]
     //[Route("[controller]")]
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
 
     public class FunctionaryController : ControllerBase
     {
 
-        private TECH_TEST_G_HURTADOContext _tECH_TEST_G_HURTADOContext;
+        public TECH_TEST_G_HURTADOContext _tECH_TEST_G_HURTADOContext;
 
-        public FunctionaryController(TECH_TEST_G_HURTADOContext tECH_TEST_G_HURTADOContext)
-        {
-            _tECH_TEST_G_HURTADOContext = tECH_TEST_G_HURTADOContext;
-        }
+        //public FunctionaryController(TECH_TEST_G_HURTADOContext tECH_TEST_G_HURTADOContext)
+        //{
+        //    _tECH_TEST_G_HURTADOContext = tECH_TEST_G_HURTADOContext;
+        //}
 
         [HttpGet]
         public IEnumerable<Functionary> Get()
         {
-            return _tECH_TEST_G_HURTADOContext.Functionaries;
+            using (var context = new TECH_TEST_G_HURTADOContext())
+            {
+                return context.Functionaries.ToList();
+            }
         }
 
         //[HttpGet]

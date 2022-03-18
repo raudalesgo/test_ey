@@ -1,63 +1,150 @@
 ﻿using back_end.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.Entity;
 
 namespace back_end.Controllers
 {
     [ApiController]
+    [Route("[controller]")]
     public class LoginController : ControllerBase
     {
         User usermodel = new User();
         public TECH_TEST_G_HURTADOContext _tECH_TEST_G_HURTADOContext;
+        ResponseModel response = new ResponseModel();
+
+        public readonly TECH_TEST_G_HURTADOContext _context;
+       
+        //public LoginController(TECH_TEST_G_HURTADOContext context)
+        //{
+        //     context = _context;
+
+        //}
 
 
 
-        [HttpGet("login")]
-        public ResponseModel login(LoginModel login)
+        //[HttpPost]
+        //[Authorize]
+        //public ActionResult  Index(LoginModel model)
+        //{
+
+        //    using (var context = new TECH_TEST_G_HURTADOContext())
+        //    {
+        //        return context.Users;
+        //    }
+
+        //    var user = context().Where(m => m.UserName == objuserlogin.UserName && m.UserPassword == objuserlogin.UserPassword).FirstOrDefault();
+        //    return user;
+        //}
+
+
+
+
+        [HttpGet("metodo")]
+        public IEnumerable<User> Get()
         {
-            
+
             ResponseModel response = new ResponseModel();
 
-            string pass = null;
-            
-            pass = _tECH_TEST_G_HURTADOContext.Users.Find(login.UserPass);
-            string user = "gerald";
 
+
+            //var pass = _tECH_TEST_G_HURTADOContext.Users.Find(login.UserPass);
+            //string user = "gerald";
+
+            //    try
+            //    {
+
+
+            using (var context = new TECH_TEST_G_HURTADOContext())
+            {
+                return context.Users.ToList();
+            }
+
+
+
+            //        //    if (users.Count() != null || login.UserName != "gerald")
+            //        //    {
+            //        //        response.status = 401;
+            //        //        response.message = "Unauthorized";
+            //        //        response.data = null;
+            //        //    }
+            //        //    else
+            //        //    {
+            //        //        response.status = 200;
+            //        //        response.message = "Ok";
+            //        //        response.data = null;
+            //        //        usermodel.UserPass = login.UserPass;
+            //        //        usermodel.UserName = login.UserName;
+
+
+
+
+
+            //        //    }
+
+
+            //        //}
+            //        //catch (Exception)
+            //        //{
+
+            //        //    throw;
+            //        //}
+
+
+
+
+
+            //        return response;
+
+
+        }
+
+
+        [HttpPost]
+        public object Post(LoginModel model)
+        {
+            
             try
             {
-                if (login.UserPass != "hola" || login.UserName != "gerald")
+                if (model != null)
                 {
-                    response.status = 401;
-                    response.message = "Unauthorized";
-                    response.data = null;
-                }
-                else
-                {
+                    using (var context = new TECH_TEST_G_HURTADOContext())
+                    {
+                        
+                            User user = (from u in context.Users
+                                         where u.UserEmail.Equals(model.UserName) &&
+                                               u.UserPass.Equals(model.UserPass)
+                                         select u).FirstOrDefault();
+                        }
+
                     response.status = 200;
                     response.message = "Ok";
-                    response.data = null;
-                    usermodel.UserPass = login.UserPass;
-                    usermodel.UserName = login.UserName;
-                    
 
-
-                    
-                    
                 }
-
 
             }
             catch (Exception)
             {
 
-                throw;
+                response.status = 401;
+                response.message = "Unauthorized";
             }
 
-
-
-
+            
+            //if (user == null)
+            //{
+            //    // Invalid user name or password
+            //}
+            //else if (user != true)
+            //{
+            //    // User inactive
+            //}
+            //else
+            //{
+            //    // Success
+            //}
 
             return response;
-
 
         }
 
